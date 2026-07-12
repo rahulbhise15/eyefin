@@ -32,7 +32,7 @@ const PILLARS = [
   {
     icon: "📖",
     title: "Understand, never tips",
-    body: "Pick a stock, get a calm plain-English read: what's happening, why, and what a beginner should notice. We never tell you to buy or sell.",
+    body: "Pick a stock, get a calm plain-English read: what's happening, the context around it, and what a beginner should notice. We never tell you to buy or sell.",
   },
   {
     icon: "🧠",
@@ -69,7 +69,7 @@ export default function Home() {
         </h1>
         <p className="mt-4 max-w-md text-lg text-muted">
           Always meant to start investing but never actually did? You&apos;re not
-          alone. Pick a stock — we&apos;ll show you what&apos;s happening and why,
+          alone. Pick a stock — we&apos;ll show you what&apos;s happening and the context around it,
           calmly, one at a time.{" "}
           <span className="text-ink">No tips, ever.</span>
         </p>

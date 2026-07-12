@@ -10,7 +10,7 @@ type Read = {
   name: string;
   symbol: string;
   price: { price: number; changePct: number; prev: number; currency: string } | null;
-  cards: { happening: string; why: string; watch: string };
+  cards: { happening: string; context: string; watch: string };
   guardrailFlag: boolean;
 };
 
@@ -90,7 +90,7 @@ export function StockRead({ symbol, name }: { symbol: string; name: string }) {
         <>
           <div className="mt-6 space-y-3 rise">
             <Card label="What's happening" text={read.cards.happening} tone="blue" />
-            <Card label="Why" text={read.cards.why} tone="emerald" />
+            <Card label="The context" text={read.cards.context} tone="emerald" />
             <Card label="What a beginner should notice" text={read.cards.watch} tone="amber" />
           </div>
 
@@ -137,7 +137,7 @@ export function StockRead({ symbol, name }: { symbol: string; name: string }) {
 }
 
 const CHIPS = [
-  "Why did it move?",
+  "What's going on with it?",
   "Is this a big or risky company?",
   "What should a beginner watch here?",
 ];

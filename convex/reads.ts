@@ -91,7 +91,7 @@ export const generateRead = action({
     const price = await fetchPrice(symbol).catch(() => null);
     const news = linkupKey
       ? await fetchNews(
-          `${name} (${symbol}) share price — what happened recently and why it moved, India NSE, last few days`,
+          `${name} (${symbol}) share price — what has been happening around it recently, the news and context, India NSE, last few days`,
           linkupKey
         ).catch(() => "")
       : "";
@@ -108,14 +108,14 @@ ${news || "No fresh news available today."}`;
     const userPrompt = buildReadPrompt({ name, symbol, dataBlock, level, simpler });
 
     const { content, tokens } = await callOpenAI(SYSTEM_PROMPT, userPrompt, openaiKey);
-    let cards = { happening: "", why: "", watch: "" };
+    let cards = { happening: "", context: "", watch: "" };
     try {
       cards = { ...cards, ...JSON.parse(content) };
     } catch {
       cards.happening = content.slice(0, 600);
     }
 
-    const flag = scanForAdvice(`${cards.happening} ${cards.why} ${cards.watch}`);
+    const flag = scanForAdvice(`${cards.happening} ${cards.context} ${cards.watch}`);
     await ctx.runMutation(internal.reads.logAi, {
       userId,
       kind: "read",

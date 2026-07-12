@@ -100,7 +100,7 @@ async function buildBrief(
   for (const s of symbols.slice(0, 6)) lines.push(await priceLine(s, nm(s)));
 
   const prompt = `Write a short, warm morning note (Telegram message, plain text, under 110 words) for a nervous beginner about the stocks they're watching. Cover:
-1. In one line each, how each stock moved and — plainly — a likely reason.
+1. In one line each, how each stock moved and, plainly, what's going on around it — never claim that news CAUSED the move; markets move for many reasons and no one knows the true cause.
 2. One tiny concept they can learn today (one sentence).
 3. End with a gentle reflective question (e.g. "notice anything you'd want to understand better?").
 Rules: never tell them to buy, sell, or hold. No emojis overload — at most one. Ground everything in the data below; don't invent numbers.
