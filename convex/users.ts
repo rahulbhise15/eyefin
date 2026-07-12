@@ -120,6 +120,41 @@ export const linkTelegram = mutation({
   },
 });
 
+// Delink an identity for a clean demo — clears email and/or Telegram from
+// matching users. Passphrase-gated so it's not an open data-wipe endpoint.
+export const clearIdentity = mutation({
+  args: {
+    key: v.string(),
+    telegramId: v.optional(v.string()),
+    email: v.optional(v.string()),
+  },
+  handler: async (ctx, { key, telegramId, email }) => {
+    if (key !== process.env.ADMIN_KEY) return { ok: false, reason: "unauthorized" };
+    let cleared = 0;
+    if (telegramId) {
+      const users = await ctx.db
+        .query("users")
+        .withIndex("by_telegram", (q) => q.eq("telegramId", telegramId))
+        .collect();
+      for (const u of users) {
+        await ctx.db.patch(u._id, { telegramId: undefined });
+        cleared++;
+      }
+    }
+    if (email) {
+      const clean = email.trim().toLowerCase();
+      const all = await ctx.db.query("users").collect();
+      for (const u of all) {
+        if (u.email === clean) {
+          await ctx.db.patch(u._id, { email: undefined });
+          cleared++;
+        }
+      }
+    }
+    return { ok: true, cleared };
+  },
+});
+
 export const recordProIntent = mutation({
   args: { userId: v.id("users") },
   handler: async (ctx, { userId }) => {
