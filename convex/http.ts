@@ -37,7 +37,7 @@ http.route({
       await tgSend(
         chatId,
         res.ok
-          ? "✓ Connected to EyeFin. Your watchlist is linked — I'll send one calm, plain-English brief each morning. Never a tip."
+          ? "✓ You're in! Putting together your first briefing now…"
           : "Hmm, I couldn't find your EyeFin session. Open the Connect link from the app again."
       );
     } else if (/^\/start/.test(text)) {

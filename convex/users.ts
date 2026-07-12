@@ -1,4 +1,5 @@
 import { mutation, query } from "./_generated/server";
+import { internal } from "./_generated/api";
 import { v } from "convex/values";
 
 export const getOrCreateUser = mutation({
@@ -79,7 +80,10 @@ export const saveEmail = mutation({
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(clean)) throw new Error("bad email");
     const already = (await ctx.db.get(userId))?.email;
     await ctx.db.patch(userId, { email: clean });
-    if (!already) await ctx.db.insert("events", { userId, type: "signup", meta: { via: "email" } });
+    if (!already) {
+      await ctx.db.insert("events", { userId, type: "signup", meta: { via: "email" } });
+      await ctx.scheduler.runAfter(0, internal.brief.sendWelcomeEmail, { userId });
+    }
     return { ok: true };
   },
 });
@@ -111,6 +115,7 @@ export const linkTelegram = mutation({
       type: "telegram_connect",
       meta: { telegramId },
     });
+    await ctx.scheduler.runAfter(0, internal.brief.sendWelcomeTelegram, { userId: user._id });
     return { ok: true, userId: user._id };
   },
 });

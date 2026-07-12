@@ -164,3 +164,81 @@ export const sendBriefNow = action({
     return { ok: true, preview: brief.text, sentToTelegram: !!token, guardrailFlag: brief.flag };
   },
 });
+
+// ── welcome + first briefing on signup (Telegram and/or email) ───────────
+export const getUserChannels = internalQuery({
+  args: { userId: v.id("users") },
+  handler: async (ctx, { userId }) => {
+    const u = await ctx.db.get(userId);
+    return u ? { telegramId: u.telegramId ?? null, email: u.email ?? null } : null;
+  },
+});
+
+// A self-contained welcome that includes their first briefing (or a nudge to
+// add a stock if their watchlist is empty). Resilient: if the LLM briefing
+// fails, they still get a warm welcome.
+async function buildWelcomeText(
+  ctx: ActionCtx,
+  userId: Id<"users">,
+  openaiKey: string | undefined
+): Promise<string> {
+  let briefText = "";
+  try {
+    if (openaiKey) {
+      const brief = await buildBrief(ctx, userId, openaiKey);
+      if (brief) briefText = brief.text;
+    }
+  } catch {
+    // fall back to welcome-only
+  }
+  const hi =
+    "Welcome to EyeFin 👋 We explain stocks in plain English — what's happening and the context around them. No tips, ever, and we never invent a reason for a move.";
+  if (briefText) {
+    return `${hi}\n\nHere's your first briefing:\n\n${briefText}\n\nThe more you explore and ask, the sharper these get.`;
+  }
+  return `${hi}\n\nAdd your first stock at eyefin.vercel.app (tap a stock → Add to watchlist) and I'll send you a calm briefing on what you're watching.`;
+}
+
+function escapeHtml(s: string): string {
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+// Email via Resend. No-ops (returns false) until RESEND_API_KEY is set.
+async function sendEmail(to: string, subject: string, text: string): Promise<boolean> {
+  const key = process.env.RESEND_API_KEY;
+  if (!key) return false;
+  const from = process.env.EMAIL_FROM || "EyeFin <onboarding@resend.dev>";
+  const body = text
+    .split("\n")
+    .map((l) => (l.trim() ? `<p style="margin:0 0 12px">${escapeHtml(l)}</p>` : ""))
+    .join("");
+  const html = `<div style="font-family:system-ui,-apple-system,sans-serif;max-width:520px;margin:0 auto;color:#0b0c14;line-height:1.55">${body}<hr style="border:none;border-top:1px solid #eee;margin:20px 0"><p style="font-size:12px;color:#8B93B8">EyeFin is educational only — not investment advice. We never tell you to buy or sell.</p></div>`;
+  const r = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
+    body: JSON.stringify({ from, to, subject, html, text }),
+  });
+  return r.ok;
+}
+
+export const sendWelcomeTelegram = internalAction({
+  args: { userId: v.id("users") },
+  handler: async (ctx, { userId }) => {
+    const token = process.env.TELEGRAM_BOT_TOKEN;
+    if (!token) return;
+    const ch = await ctx.runQuery(internal.brief.getUserChannels, { userId });
+    if (!ch?.telegramId) return;
+    const text = await buildWelcomeText(ctx, userId, process.env.OPENAI_API_KEY);
+    await sendTelegram(token, ch.telegramId, text);
+  },
+});
+
+export const sendWelcomeEmail = internalAction({
+  args: { userId: v.id("users") },
+  handler: async (ctx, { userId }) => {
+    const ch = await ctx.runQuery(internal.brief.getUserChannels, { userId });
+    if (!ch?.email) return;
+    const text = await buildWelcomeText(ctx, userId, process.env.OPENAI_API_KEY);
+    await sendEmail(ch.email, "Welcome to EyeFin — your first briefing", text);
+  },
+});
