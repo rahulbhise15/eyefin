@@ -1,10 +1,12 @@
 import { query } from "./_generated/server";
+import { v } from "convex/values";
 
 // The evals / insights dashboard. Read-only aggregate over the whole app.
 // Small data volumes (hackathon scale), so full-collection scans are fine.
 export const insights = query({
-  args: {},
-  handler: async (ctx) => {
+  args: { key: v.string() },
+  handler: async (ctx, { key }) => {
+    if (key !== process.env.ADMIN_KEY) return null; // private dashboard
     const users = await ctx.db.query("users").collect();
     const events = await ctx.db.query("events").collect();
     const logs = await ctx.db.query("aiLogs").collect();

@@ -5,6 +5,7 @@ import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useUser } from "@/lib/useUser";
 import { ONBOARDING_TAGS, rankByTags, matchReason } from "@/lib/tags";
+import { SearchBox } from "./SearchBox";
 
 export function ExploreSection() {
   const userId = useUser();
@@ -96,6 +97,12 @@ export function ExploreSection() {
 
   return (
     <section className="rise">
+      <div className="mb-5">
+        <div className="mb-2 font-display text-xs uppercase tracking-[0.22em] text-muted">
+          Search any Indian stock
+        </div>
+        <SearchBox />
+      </div>
       <div className="mb-4 flex items-baseline justify-between gap-3">
         <h2 className="font-display text-xs uppercase tracking-[0.22em] text-muted">
           {tags.length ? "Lined up for you" : "Start with one you know"}

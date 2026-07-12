@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { bySymbol } from "@/lib/stocks";
@@ -9,7 +10,58 @@ function name(sym: string) {
 }
 
 export default function AdminPage() {
-  const d = useQuery(api.admin.insights, {});
+  const [key, setKey] = useState<string | null>(null);
+  const [input, setInput] = useState("");
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    setKey(localStorage.getItem("eyefin_admin_key"));
+    setReady(true);
+  }, []);
+  const d = useQuery(api.admin.insights, key ? { key } : "skip");
+
+  function unlock() {
+    const k = input.trim();
+    if (!k) return;
+    localStorage.setItem("eyefin_admin_key", k);
+    setKey(k);
+  }
+
+  if (!ready) return null;
+
+  // Locked: no key yet, or the key was rejected (query returns null).
+  if (!key || d === null) {
+    return (
+      <main className="relative mx-auto flex min-h-[70vh] w-full max-w-sm flex-col justify-center px-5">
+        <div className="glow" />
+        <h1 className="text-2xl font-medium">Admin access</h1>
+        <p className="mt-2 text-sm text-muted">
+          This dashboard is private. Enter the passphrase to continue.
+        </p>
+        <input
+          type="password"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") unlock();
+          }}
+          placeholder="Passphrase"
+          className="mt-4 rounded-xl border border-border bg-surface px-3 py-2.5 text-sm outline-none focus:border-accent"
+        />
+        {key && d === null && (
+          <p className="mt-2 text-sm text-down">Wrong passphrase — try again.</p>
+        )}
+        <button
+          onClick={unlock}
+          className="mt-3 rounded-xl bg-accent px-4 py-2.5 text-sm font-medium text-white"
+        >
+          Unlock
+        </button>
+        <Link href="/" className="mt-5 text-sm text-muted hover:text-ink">
+          ← home
+        </Link>
+      </main>
+    );
+  }
 
   return (
     <main className="relative mx-auto w-full max-w-3xl px-5 py-10">

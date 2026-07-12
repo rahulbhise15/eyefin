@@ -16,6 +16,7 @@ import type * as http from "../http.js";
 import type * as journey from "../journey.js";
 import type * as prompt from "../prompt.js";
 import type * as reads from "../reads.js";
+import type * as search from "../search.js";
 import type * as users from "../users.js";
 
 import type {
@@ -33,6 +34,7 @@ declare const fullApi: ApiFromModules<{
   journey: typeof journey;
   prompt: typeof prompt;
   reads: typeof reads;
+  search: typeof search;
   users: typeof users;
 }>;
 

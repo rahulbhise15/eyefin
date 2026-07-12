@@ -4,13 +4,16 @@ import { StockRead } from "./StockRead";
 
 export default async function StockPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ symbol: string }>;
+  searchParams: Promise<{ n?: string }>;
 }) {
   const { symbol: raw } = await params;
+  const { n } = await searchParams;
   const symbol = decodeURIComponent(raw);
   const stock = bySymbol(symbol);
-  const name = stock?.name ?? symbol.replace(".NS", "");
+  const name = stock?.name ?? (n?.trim() || symbol.replace(".NS", ""));
 
   return (
     <main className="mx-auto w-full max-w-xl px-5 py-8">
