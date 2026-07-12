@@ -1,0 +1,83 @@
+@import "tailwindcss";
+
+/* ── EyeFin — bold, bright, futuristic AI-fintech ──────────────────────
+   Deep blue-violet dark base, neon electric accents, doodle wallpaper. */
+:root {
+  --bg: #070812;
+  --surface: #10121F;
+  --surface-2: #181B2C;
+  --ink: #ECEFFF;
+  --muted: #8B90B4;
+  --border: #24283F;
+  --accent: #4C86FF;      /* electric blue */
+  --accent-2: #22D3EE;    /* cyan */
+  --accent-3: #A78BFA;    /* violet */
+  --accent-soft: #13233F;
+  --emerald: #2FE6A8;     /* neon mint */
+  --amber: #FFC24B;
+  --up: #2FE6A8;
+  --down: #FF7A6B;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-accent2: var(--accent-2);
+  --color-accent3: var(--accent-3);
+  --color-accent-soft: var(--accent-soft);
+  --color-emerald: var(--emerald);
+  --color-amber: var(--amber);
+  --color-up: var(--up);
+  --color-down: var(--down);
+  --font-sans: var(--font-body);
+  --font-display: var(--font-display);
+}
+
+html { -webkit-text-size-adjust: 100%; color-scheme: dark; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3 {
+  font-family: var(--font-display), ui-monospace, monospace;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+::selection { background: var(--accent); color: #fff; }
+
+.gradient-text {
+  background: linear-gradient(100deg, #5B90FF 0%, #22D3EE 48%, #2FE6A8 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* bright hero glow */
+.glow {
+  position: absolute; inset: -3rem 0 auto 0; height: 30rem; pointer-events: none; z-index: -1;
+  background:
+    radial-gradient(40rem 22rem at 8% -4%, rgba(76,134,255,0.40), transparent 60%),
+    radial-gradient(34rem 20rem at 110% 6%, rgba(47,230,168,0.24), transparent 60%),
+    radial-gradient(30rem 20rem at 62% 0%, rgba(167,139,250,0.22), transparent 65%);
+  filter: saturate(1.15);
+}
+
+@keyframes riseIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+.rise { animation: riseIn 0.5s ease both; }
+
+/* AI "thinking" shimmer for loading states */
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+.shimmer {
+  background: linear-gradient(90deg, var(--surface) 20%, var(--surface-2) 50%, var(--surface) 80%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s linear infinite;
+}
