@@ -26,7 +26,10 @@ async function priceLine(symbol: string, name: string): Promise<string> {
 }
 
 async function openai(system: string, user: string, key: string): Promise<string> {
-  const r = await fetch("https://api.openai.com/v1/chat/completions", {
+  const url =
+    process.env.OPENAI_CHAT_URL ||
+    "https://api.openai.com/v1/chat/completions";
+  const r = await fetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/json", Authorization: `Bearer ${key}` },
     body: JSON.stringify({

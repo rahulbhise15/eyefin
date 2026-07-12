@@ -50,7 +50,10 @@ async function callOpenAI(
     ],
   };
   if (json) payload.response_format = { type: "json_object" };
-  const r = await fetch("https://api.openai.com/v1/chat/completions", {
+  const url =
+    process.env.OPENAI_CHAT_URL ||
+    "https://api.openai.com/v1/chat/completions";
+  const r = await fetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
     body: JSON.stringify(payload),
