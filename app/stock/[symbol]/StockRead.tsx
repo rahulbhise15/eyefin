@@ -115,6 +115,12 @@ export function StockRead({ symbol, name }: { symbol: string; name: string }) {
             >
               {watched ? "✓ Watching" : "Add to watchlist"}
             </button>
+            <Link
+              href="/join"
+              className="rounded-full bg-emerald px-4 py-2 text-sm font-semibold text-black transition-transform hover:scale-[1.02]"
+            >
+              Save my journey →
+            </Link>
           </div>
 
           <FollowUp symbol={symbol} name={name} userId={userId} />

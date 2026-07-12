@@ -28,14 +28,41 @@ function Logo() {
   );
 }
 
+const PILLARS = [
+  {
+    icon: "📖",
+    title: "Understand, never tips",
+    body: "Pick a stock, get a calm plain-English read: what's happening, why, and what a beginner should notice. We never tell you to buy or sell.",
+  },
+  {
+    icon: "🧠",
+    title: "A memory that learns you",
+    body: "The more you explore, ask, and come back, the more personal it gets — explanations start simple and grow with you. That's the AI companion under the hood.",
+  },
+  {
+    icon: "📲",
+    title: "A calm daily brief",
+    body: "Save a watchlist, connect Telegram or email, and get one short morning note on the stocks you're watching — powered by our Hermes agent. Still no tips, ever.",
+  },
+];
+
 export default function Home() {
   return (
     <main className="relative mx-auto w-full max-w-xl px-5 py-12">
       <div className="glow" />
 
-      <header className="mb-12 rise">
+      <header className="mb-10 flex items-center justify-between rise">
         <Logo />
-        <h1 className="mt-7 text-[2.7rem] font-medium leading-[1.05]">
+        <Link
+          href="/join"
+          className="rounded-full bg-emerald px-4 py-2 text-sm font-semibold text-black glow"
+        >
+          Join free
+        </Link>
+      </header>
+
+      <section className="mb-10 rise">
+        <h1 className="text-[2.7rem] font-medium leading-[1.05]">
           The market,
           <br />
           <span className="gradient-text">finally in plain English.</span>
@@ -50,24 +77,42 @@ export default function Home() {
           <span className="text-accent2">✦</span> Backed by a memory that learns
           you — it gets sharper every time you come back.
         </p>
-      </header>
+      </section>
+
+      {/* Value prop — what EyeFin actually is */}
+      <section className="mb-12 grid gap-3 rise">
+        {PILLARS.map((p) => (
+          <div
+            key={p.title}
+            className="rounded-2xl border border-border bg-surface p-4"
+          >
+            <div className="flex items-start gap-3">
+              <span className="text-xl leading-none">{p.icon}</span>
+              <div>
+                <div className="font-medium">{p.title}</div>
+                <p className="mt-1 text-sm leading-relaxed text-muted">{p.body}</p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </section>
 
       <ExploreSection />
 
-      <section className="mt-10 rounded-2xl border border-border bg-surface p-5 rise">
+      <section className="mt-10 rounded-2xl border border-emerald/40 bg-gradient-to-br from-emerald/10 to-accent2/5 p-5 rise">
         <div className="flex items-center justify-between gap-4">
           <div>
             <div className="font-medium">Save your journey</div>
             <p className="text-sm text-muted">
-              Keep your watchlist and a memory that learns you — free, no
-              password.
+              Keep your watchlist, a daily brief, and a memory that learns you —
+              free, no password.
             </p>
           </div>
           <Link
             href="/join"
-            className="whitespace-nowrap rounded-full bg-accent px-5 py-2.5 text-sm font-medium text-white"
+            className="whitespace-nowrap rounded-full bg-emerald px-5 py-2.5 text-sm font-semibold text-black"
           >
-            Sign up →
+            Join free →
           </Link>
         </div>
       </section>

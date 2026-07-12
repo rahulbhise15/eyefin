@@ -36,6 +36,12 @@ export default function JourneyPage() {
       <h1 className="mt-4 text-3xl font-medium">
         Your <span className="gradient-text">journey</span>
       </h1>
+      <p className="mt-2 max-w-md text-muted">
+        Every stock you read, every question you ask, every morning brief — it
+        compounds. EyeFin&apos;s memory learns you, your reads get sharper, and
+        you grow into a more confident investor. This is where you watch it
+        happen — check back anytime.
+      </p>
 
       {j === undefined ? (
         <p className="mt-6 text-sm text-muted">Loading…</p>
@@ -125,13 +131,35 @@ export default function JourneyPage() {
             </div>
           </div>
 
-          <div className="mt-8 rounded-2xl border border-border bg-surface p-5 text-center">
+          {/* The core story: how EyeFin + Hermes grow you as an investor */}
+          <div className="mt-6 rounded-2xl border border-border bg-surface p-5">
+            <div className="font-display text-xs uppercase tracking-[0.15em] text-accent3">
+              How you grow here
+            </div>
+            <ul className="mt-3 space-y-2.5 text-sm text-muted">
+              <li>
+                <span className="text-ink">📖 Adaptive reads</span> — explanations
+                start simple and deepen as you interact.
+              </li>
+              <li>
+                <span className="text-ink">🧠 A memory that learns you</span> — your
+                Hermes companion remembers what you&apos;ve explored and tailors
+                what comes next.
+              </li>
+              <li>
+                <span className="text-ink">📲 A daily brief</span> — one calm note
+                each morning on your watchlist, so the habit sticks.
+              </li>
+            </ul>
+          </div>
+
+          <div className="mt-4 rounded-2xl border border-emerald/40 bg-gradient-to-br from-emerald/10 to-accent2/5 p-5 text-center">
             <p className="text-sm text-muted">
               Keep this — and let EyeFin learn you further.
             </p>
             <Link
               href="/join"
-              className="mt-3 inline-block rounded-full bg-accent px-5 py-2.5 text-sm font-medium text-white"
+              className="mt-3 inline-block rounded-full bg-emerald px-5 py-2.5 text-sm font-semibold text-black"
             >
               Save my journey →
             </Link>

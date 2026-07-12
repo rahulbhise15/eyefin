@@ -25,12 +25,12 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         <DoodleBg />
         <ConvexClientProvider>{children}</ConvexClientProvider>
-        {/* Datafast analytics. NOTE: data-domain must match the live domain —
-            if we deploy to *.pages.dev, update it in the Datafast dashboard. */}
+        {/* Datafast analytics. data-domain MUST match the live domain and the
+            website's domain in the Datafast dashboard, or events aren't counted. */}
         <Script
           src="https://datafa.st/js/script.js"
           data-website-id="dfid_EYEDZZGBLcaj6E3e7RZv7"
-          data-domain="eyefin.com"
+          data-domain="eyefin.vercel.app"
           strategy="afterInteractive"
         />
       </body>
