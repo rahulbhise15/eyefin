@@ -15,13 +15,23 @@ export const insights = query({
     const usersWith = (type: string) =>
       new Set(events.filter((e) => e.type === type).map((e) => e.userId)).size;
 
+    // True external Telegram signups: distinct chat IDs, minus the test row
+    // and Rahul's own account (he re-connects it while demoing).
+    const EXCLUDE_TG = new Set(["999000111", "8850234040"]);
+    const telegramExternal = new Set(
+      events
+        .filter((e) => e.type === "telegram_connect")
+        .map((e) => (e.meta as { telegramId?: string } | null)?.telegramId)
+        .filter((id): id is string => !!id && !EXCLUDE_TG.has(id))
+    ).size;
+
     const funnel = [
       { stage: "Visited", n: users.length },
       { stage: "Read a stock", n: usersWith("view") },
       { stage: "Asked a question", n: usersWith("followup") },
       { stage: "Added to watchlist", n: usersWith("watch") },
       { stage: "Signed up", n: usersWith("signup") },
-      { stage: "Connected Telegram", n: usersWith("telegram_connect") },
+      { stage: "Connected Telegram", n: telegramExternal },
     ];
 
     // Confusion map: where people asked for simpler / asked follow-ups.
